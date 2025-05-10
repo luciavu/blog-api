@@ -7,6 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', apiRouter);
+
 app.get('/', (req: Request, res: Response) => {
   console.log('GET route hit');
   res.send('Welcome to the Blog API');

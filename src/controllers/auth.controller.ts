@@ -25,7 +25,7 @@ export const register: RequestHandler = async (req: Request, res: Response): Pro
     });
     res.status(201).json({ message: 'User created', userId: user.id });
   } catch (error: any) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -41,11 +41,15 @@ export const login: RequestHandler = async (req: Request, res: Response): Promis
       }
 
       // Generate JWT
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET_KEY, { expiresIn: '1h' });
-      res.json({ token, user: { id: user.id, username: user.username, isAdmin: user.isAdmin } });
+      const token = jwt.sign(
+        { userId: user.id, username: user.username, isAdmin: user.isAdmin },
+        JWT_SECRET_KEY,
+        { expiresIn: '1h' }
+      );
+      return res.json({ token });
     }
     return res.status(401).json({ message: 'Invalid credentials' });
   } catch (error: any) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
