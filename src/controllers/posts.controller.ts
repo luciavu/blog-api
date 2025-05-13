@@ -32,3 +32,68 @@ export const getPostById: RequestHandler = async (req: Request, res: Response): 
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const createPost: RequestHandler = async (req: Request, res: Response): Promise<any> => {
+  const { authorId, previewImage, title, content, published } = req.body;
+
+  if (!title || !content || !previewImage) {
+    return res.status(400).json({ message: 'Title, content and image is required' });
+  }
+
+  try {
+    const newPost = await prisma.post.create({
+      data: {
+        previewImage,
+        title,
+        content,
+        published,
+        authorId,
+      },
+    });
+    res.status(201).json(newPost);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updatePost: RequestHandler = async (req: Request, res: Response): Promise<any> => {
+  const { previewImage, title, content, published } = req.body;
+  const postId = parseInt(req.params.id);
+
+  if (isNaN(postId)) {
+    return res.status(400).json({ message: 'Invalid ID format' });
+  }
+
+  try {
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: { title, content, previewImage, published },
+    });
+    res.status(200).json(updatedPost);
+  } catch (error: any) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deletePost: RequestHandler = async (req: Request, res: Response): Promise<any> => {
+  const postId = parseInt(req.params.id);
+
+  if (isNaN(postId)) {
+    return res.status(400).json({ message: 'Invalid ID format' });
+  }
+
+  try {
+    await prisma.post.delete({
+      where: { id: postId },
+    });
+    res.status(204).send();
+  } catch (error: any) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    res.status(500).json({ message: error.message });
+  }
+};
