@@ -1,4 +1,5 @@
 import { Request, Response, RequestHandler } from 'express';
+import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '../generated/prisma';
@@ -9,6 +10,12 @@ const prisma = new PrismaClient();
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY as string;
 
 export const register: RequestHandler = async (req: Request, res: Response): Promise<any> => {
+  const errors = validationResult(req);
+  console.log(errors);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
     const { username, password } = req.body;
 
