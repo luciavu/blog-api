@@ -30,10 +30,10 @@ export const getCommentById: RequestHandler = async (req: Request, res: Response
 };
 
 export const createComment: RequestHandler = async (req: Request, res: Response): Promise<any> => {
-  const { text, authorId } = req.body;
+  const { text } = req.body;
   const postId = req.params.postId;
 
-  if (!text || !postId || !authorId) {
+  if (!text || !postId || !req.user) {
     return res.status(400).json({ message: 'Content, post id and author id is required' });
   }
 
@@ -42,7 +42,7 @@ export const createComment: RequestHandler = async (req: Request, res: Response)
       data: {
         text,
         postId: parseInt(postId),
-        authorId,
+        authorId: req.user.userId,
       },
     });
     res.status(201).json(newComment);

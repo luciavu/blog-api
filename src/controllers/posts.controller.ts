@@ -5,6 +5,15 @@ const prisma = new PrismaClient();
 
 export const getPosts: RequestHandler = async (req: Request, res: Response): Promise<any> => {
   try {
+    const posts = await prisma.post.findMany({ where: { published: true } });
+    res.status(200).json(posts);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAllPosts: RequestHandler = async (req: Request, res: Response): Promise<any> => {
+  try {
     const posts = await prisma.post.findMany();
     res.status(200).json(posts);
   } catch (error: any) {
@@ -34,9 +43,9 @@ export const getPostById: RequestHandler = async (req: Request, res: Response): 
 };
 
 export const createPost: RequestHandler = async (req: Request, res: Response): Promise<any> => {
-  const { authorId, previewImage, title, content, published } = req.body;
+  const { previewImage, title, content, published } = req.body;
 
-  if (!title || !content || !previewImage) {
+  if (!title || !content || !previewImage || !req.user) {
     return res.status(400).json({ message: 'Title, content and image is required' });
   }
 
@@ -47,7 +56,9 @@ export const createPost: RequestHandler = async (req: Request, res: Response): P
         title,
         content,
         published,
-        authorId,
+        author: {
+          connect: { id: req.user.userId },
+        },
       },
     });
     res.status(201).json(newPost);

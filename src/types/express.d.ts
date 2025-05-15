@@ -1,7 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken';
 
 interface JwtUserPayload {
-  id: number;
+  userId: number;
   username: string;
   isAdmin: boolean;
 }

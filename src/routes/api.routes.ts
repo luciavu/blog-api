@@ -9,6 +9,6 @@ const apiRouter = Router();
 apiRouter.use('/auth', authRoutes); // /api/auth
 apiRouter.use('/users', userRoutes); // /api/users
 apiRouter.use('/posts', postRoutes); // api/posts
-apiRouter.use('/', commentRoutes); // api/(posts/:id)
+apiRouter.use('/posts', commentRoutes); // api/posts/:id
 
 export default apiRouter;

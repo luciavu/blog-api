@@ -9,13 +9,13 @@ import { verifyToken, isAdmin } from '../middleware/auth.middleware';
 const router = Router();
 
 // Public Routes
-router.get('/posts/:postId/comments', getComments);
-router.get('/posts/:postId/comments/:id', getCommentById);
+router.get('/:postId/comments', getComments);
+router.get('/:postId/comments/:id', getCommentById);
 
 // Logged-in only
-router.post('/posts/:postId/comments', verifyToken, createComment);
+router.post('/:postId/comments', verifyToken, createComment);
 
 // Admin only
-router.delete('/posts/:postId/comments/:id', verifyToken, isAdmin, deleteComment);
+router.delete('/:postId/comments/:id', verifyToken, isAdmin, deleteComment);
 
 export default router;
