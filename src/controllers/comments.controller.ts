@@ -3,9 +3,48 @@ import { PrismaClient } from '../generated/prisma';
 
 const prisma = new PrismaClient();
 
-export const getComments: RequestHandler = async (req: Request, res: Response): Promise<any> => {
+// All comments
+export const getAllComments: RequestHandler = async (req: Request, res: Response): Promise<any> => {
+  const postId = parseInt(req.params.postId);
   try {
-    const comments = await prisma.comment.findMany();
+    const comments = await prisma.comment.findMany({
+      orderBy: { id: 'asc' },
+      include: {
+        author: {
+          select: {
+            username: true,
+            isAdmin: true,
+          },
+        },
+      },
+    });
+    res.status(200).json(comments);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// All comments for a post
+export const getComments: RequestHandler = async (req: Request, res: Response): Promise<any> => {
+  const postId = parseInt(req.params.postId);
+
+  if (isNaN(postId)) {
+    return res.status(400).json({ message: 'Invalid ID format' });
+  }
+
+  try {
+    const comments = await prisma.comment.findMany({
+      where: { postId },
+      orderBy: { id: 'asc' },
+      include: {
+        author: {
+          select: {
+            username: true,
+            isAdmin: true,
+          },
+        },
+      },
+    });
     res.status(200).json(comments);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
@@ -19,7 +58,9 @@ export const getCommentById: RequestHandler = async (req: Request, res: Response
   }
 
   try {
-    const comment = await prisma.comment.findUnique({ where: { id: commentId } });
+    const comment = await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
     if (!comment) {
       return res.status(404).json({ message: 'Comment not found' });
     }
@@ -33,6 +74,7 @@ export const createComment: RequestHandler = async (req: Request, res: Response)
   const { text } = req.body;
   const postId = req.params.postId;
 
+  console.log(text, postId, req.user!.userId);
   if (!text || !postId || !req.user) {
     return res.status(400).json({ message: 'Content, post id and author id is required' });
   }

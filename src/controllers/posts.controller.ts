@@ -5,7 +5,10 @@ const prisma = new PrismaClient();
 
 export const getPosts: RequestHandler = async (req: Request, res: Response): Promise<any> => {
   try {
-    const posts = await prisma.post.findMany({ where: { published: true } });
+    const posts = await prisma.post.findMany({
+      where: { published: true },
+      orderBy: { id: 'asc' },
+    });
     res.status(200).json(posts);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
@@ -14,7 +17,9 @@ export const getPosts: RequestHandler = async (req: Request, res: Response): Pro
 
 export const getAllPosts: RequestHandler = async (req: Request, res: Response): Promise<any> => {
   try {
-    const posts = await prisma.post.findMany();
+    const posts = await prisma.post.findMany({
+      orderBy: { id: 'asc' },
+    });
     res.status(200).json(posts);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });

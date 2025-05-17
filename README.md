@@ -2,7 +2,7 @@
 
 The Odin Project - NodeJS Course Project (5/8):
 
-Repo (1/2) - A RESTful API backend for a full-stack blog platform built with Express, Prisma ORM, JWT and TypeScript.
+Repo (1/2) - A RESTful API backend for a full-stack blog platform built with Express, Prisma ORM, JWT and TypeScript. Deployed using Render and Supabase.
 
 ## Features
 
@@ -24,6 +24,7 @@ Repo (1/2) - A RESTful API backend for a full-stack blog platform built with Exp
 | /posts/:id                  | GET    | Public | Fetch post by id              |
 | /posts/:id                  | PUT    | Admin  | Update post details           |
 | /posts/:id                  | DELETE | Admin  | Delete a post                 |
+| /comments                   | GET    | Public | Fetch all comments            |
 | /posts/:postId/comments     | GET    | Public | Fetch all comments for a post |
 | /posts/:postId/comments     | POST   | User   | Add a comment to a post       |
 | /posts/:postId/comments/:id | GET    | Public | Fetch comment by id           |
