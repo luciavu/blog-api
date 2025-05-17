@@ -2,7 +2,7 @@ import { Request, Response, RequestHandler } from 'express';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 dotenv.config();
 
